@@ -14,7 +14,8 @@ this file and include it in basic-server.js so that it actually works.
 var messages = {};
 messages.results = [];
 
-module.exports = function(request, response) {
+// module.exports = function(request, response) {
+var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
   // They include information about both the incoming request, such as
@@ -31,10 +32,10 @@ module.exports = function(request, response) {
   // console.logs in your code.
   console.log("Serving request type " + request.method + " for url " + request.url);
   var body;
+  var headers = defaultCorsHeaders;
   
   switch (request.url){
     case "/classes/messages": 
-      var headers = defaultCorsHeaders;
       
       if(request.method==='POST'){ // update message object
         var statusCode = 201;
@@ -61,13 +62,40 @@ module.exports = function(request, response) {
         headers['Content-Type'] = "application/json";
         response.writeHead(statusCode, headers);
 
-        console.log(messages);
+        // console.log(messages);
         response.end(JSON.stringify(messages));        
       } //if
       // response.end  
       break;
     case "/classes/room1":
-    
+       if(request.method==='POST'){ // update message object
+        var statusCode = 201;
+        headers['Content-Type'] = "application/json";
+        response.writeHead(statusCode, headers);
+
+        body = ''; //reset body variable
+        
+        request.on('data', function(chunk){
+          body += chunk;
+        }); //request
+        
+        request.on('end', function(){
+          // console.log("About to Save:", body);
+          // console.log("Messages after save:", body);
+          
+          // console.log(messages);
+          messages.results.push(JSON.parse(body));
+          response.end(JSON.stringify(messages));
+        }); //request
+
+      }else{
+        var statusCode = 200;
+        headers['Content-Type'] = "application/json";
+        response.writeHead(statusCode, headers);
+
+        // console.log(messages);
+        response.end(JSON.stringify(messages));        
+      } //if  
 
       break;
     default:
@@ -104,7 +132,7 @@ module.exports = function(request, response) {
   // response.end("Hello, World!");
 }; //module.exports
 // export = 
-// exports.requestHandler = requestHandler; 
+  module.exports.requestHandler = requestHandler; 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
 // This code allows this server to talk to websites that
 // are on different domains, for instance, your chat client.
