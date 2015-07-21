@@ -1,6 +1,13 @@
 /* Import node's http module: */
+
 var http = require("http");
 var handleRequest = require("./request-handler.js")
+var express = require("express");
+var path = require("path");
+var app = express();
+
+var routes = require("../routes"); //automatically loads index.js in /routes
+
 
 // Every server needs to listen on a port with a unique number. The
 // standard port for HTTP servers is port 80, but that port is
@@ -14,6 +21,17 @@ var port = 3000;
 // special address that always refers to localhost.
 var ip = "127.0.0.1";
 
+// give us access (static, public) to the /client/ directory
+var publicPath = path.join(__dirname, '../public');
+console.log(publicPath);
+
+app.use('/public', express.static(publicPath));
+routes(app);
+app.listen(port, function(){
+  console.log('We are running.');  
+  console.log(__dirname);
+}); //app.listen
+
 
 
 // We use node's http module to create a server.
@@ -22,9 +40,9 @@ var ip = "127.0.0.1";
 // incoming requests.
 //
 // After creating the server, we will tell it to listen on the given port and IP. */
-var server = http.createServer(handleRequest.requestHandler);
-console.log("Listening on http://" + ip + ":" + port);
-server.listen(port, ip);
+// var server = http.createServer(handleRequest.requestHandler);
+// console.log("Listening on http://" + ip + ":" + port);
+// server.listen(port, ip);
 
 // To start this server, run:
 //

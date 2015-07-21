@@ -1,0 +1,152 @@
+body {
+  background: #eee;
+  text-align: center;
+  padding: 0 25px;
+  font-family: arial, sans-serif;
+}
+
+#main {
+  width: 500px;
+  margin: auto;
+  text-align: left;
+  background: white;
+  padding: 50px 60px;
+  border: solid #ddd;
+  border-width: 0 1px 1px 1px;
+  overflow: hidden;
+}
+
+#main h1 {
+  margin-top: 0;
+  font-size: 35px;
+}
+
+#main h1 span {
+  font-style: italic;
+}
+
+#main ul {
+  padding-left: 20px;
+}
+
+#main .error {
+  border: 1px solid red;
+  background: #FDEFF0;
+  padding: 20px;
+}
+
+#main .success {
+  margin-top: 25px;
+}
+
+#main .success code {
+  font-size: 12px;
+  color: green;
+  line-height: 13px;
+}
+
+form {
+  padding: 20px;
+  padding-left: 0;
+  margin-bottom: 20px;
+}
+
+form input[type=text] {
+  margin-right: 10px;
+  width: 70%;
+  font-size: 12px;
+  padding: 5px;
+}
+
+.logo {
+  font: 4em 'Rajdhani', Arial, sans-serif;
+  width:100%;
+}
+
+.chat {
+  padding: 5px;
+  margin-bottom: 5px;
+  background-color: #eee;
+}
+
+.chat .username {
+  font-weight: 800;
+}
+
+.chat:hover {
+  background-color: #ddd;
+}
+
+.spinner {
+  float: right;
+  height: 46px;
+  margin-bottom: 5px;
+}
+
+.spinner img {
+  padding: 10px;
+}
+
+#messages {
+  position: relative;
+  overflow-y: scroll;
+  border: 1px solid #e9eaec;
+  border-radius: 10px;
+  width: 500px;
+  min-height: 90%;
+}
+
+#messages .chatName {
+  color: blue;
+}
+
+#messages .chatName:hover {
+  cursor: pointer;
+  color: green;
+  text-decoration: underline;
+}
+
+#messages .friends {
+  font-weight: bold;
+}
+
+#logindiv {
+  opacity: 1;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  background: #000;
+  display: none;
+}
+  
+#loginform {
+  opacity: 0.9;
+  width: 600px;
+  margin: 0px;
+  background-color: white;
+  font-family: sans-serif;
+  position: relative;
+  border: 1px solid #e9eaec;
+  border-radius: 8px;
+  left: 50%;
+  top: 50%;
+  margin-left: -210px;
+  margin-top: -255px;
+}
+
+ #loginlogo {
+  font: 2em;
+  margin: auto;
+  width:100%;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.1);
+}

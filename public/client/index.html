@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title class="logo">chatterbox</title>
+    <link rel="stylesheet" href="/public/client/styles/styles.css">
+    <link href='http://fonts.googleapis.com/css?family=Rajdhani:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- dependencies -->
+    <script src="/public/client/bower_components/jquery/jquery.min.js"></script>
+    <script src="/public/client/bower_components/underscore/underscore-min.js"></script>
+    <!-- your scripts -->
+    <script src="/public/client/env/config.js"></script>
+    <script src="/public/client/scripts/app.js"></script>
+
+  </head>
+
+  <body>
+    <div id="main">
+      <h1 class='logo'>chatterbox</h1>
+      <div id="signedin">signed in as: <span id="username">Guest</span></div>
+      <select id='chatrooms'>
+      </select>
+      <div id="form">
+         <form>
+           <input type="text" id='inputMessage' placeholder="Write a message" >
+           <button type='button' id='submitMessage'>Submit</button>
+           <input type="text" id='inputRoom' placeholder="New Room Name" >
+           <button type='button' id='submitRoom'>Submit</button>
+         </form>
+      </div> <!-- form -->
+      <div id="messages">
+      </div> <!-- messages -->
+    </div> <!-- main -->
+
+    <!-- login form -->
+    <div id="logindiv">
+      <form class="form" action="#" id="loginform">
+        <div class="logo" id="loginlogo">chatterbox</div>
+        <h5><font color="#4d93f5">Please enter username or login as Guest</font></h5>
+        <label>Username: </label>
+        <input type="text" id="name" />
+        <br>
+        <button type="button" class="button" id="login">Login</button>
+        <br>
+      </form>
+    </div> <!-- logindiv -->
+  </body>
+</html>
