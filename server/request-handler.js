@@ -11,6 +11,7 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var fs = require('fs');
 var messages = {};
 messages.results = [];
 
@@ -92,15 +93,25 @@ var requestHandler = function(request, response) {
         var statusCode = 200;
         headers['Content-Type'] = "application/json";
         response.writeHead(statusCode, headers);
-
-        // console.log(messages);
         response.end(JSON.stringify(messages));        
       } //if  
 
       break;
+    case "/":
+
+      // this won't work, we need express here! 
+      fs.readFile('./client/client/index.html', function (err, html) {
+        if (err) {
+          console.log(err)
+        } 
+        var statusCode = 200;
+        headers['Content-Type'] = "text/html";
+        response.writeHead(statusCode, headers);  
+        response.end(html);  
+      })
+      break; 
     default:
       var statusCode = 404;
-      var headers = defaultCorsHeaders;
       headers['Content-Type'] = "text/plain";
       response.writeHead(statusCode, headers);
       response.end("Page not found!");
