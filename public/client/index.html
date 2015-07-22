@@ -14,28 +14,29 @@
     <script>
     var socket = io();
 
-    // register for channel 'All Rooms'?
-
     // on init populate chatroom selector with existing chatrooms
     socket.on('init', function(data){
-      console.log('I just connected to the server, which sent me this: ', data);
       _.each(data.chatrooms, function(chatroom){
         $('#chatrooms').append('<option value="'+chatroom+'">'+chatroom+'</option>');
       })
-
-      // listen for chatroom changes and emit an event to the server to join new channel
-      $("#chatrooms").change(function () {
-        // tell server we are switching channels
-        socket.emit('channel change', $('option:selected').text());
-        // empty the current message board
-        $('#messages').empty();
-        // now we need to rebuild the previous (10) messages from storage 
-        socket.on('channel rebuild', function(data){
-
-        })
-      });
     })
 
+    // listen for chatroom changes and emit an event to the server to join new channel
+    // $("#chatrooms").change(function () {
+    $(document).on('change', '#chatrooms', function(){
+      // tell server we are switching channels
+      socket.emit('channel change', $('option:selected').text());
+      // empty the current message board
+      $('#messages').empty();
+    });
+
+    // on channel change, rebuild the previous (10) messages from storage 
+    socket.on('channel rebuild', function(data){
+      _.each(data, function(item){
+        $('#messages').prepend('<div><span>'+item.username+'</span>: <span>'+item.text+'</span></div>');
+      })
+
+    })
     // send new message
     $(document).on('click', '#submitMessage', function() {
       var data = {
@@ -51,7 +52,9 @@
     // receive new message from server
     socket.on('broadcast chat', function(data){
        $('#messages').prepend('<div><span>'+data.username+'</span>: <span>'+data.text+'</span></div>');
-     })
+    })
+
+    // TODO: create new chatrooms
 
     </script>
   </head>
@@ -75,17 +78,5 @@
       </div> <!-- messages -->
     </div> <!-- main -->
 
-    <!-- login form -->
-    <div id="logindiv">
-      <form class="form" action="#" id="loginform">
-        <div class="logo" id="loginlogo">chatterbox</div>
-        <h5><font color="#4d93f5">Please enter username or login as Guest</font></h5>
-        <label>Username: </label>
-        <input type="text" id="name" />
-        <br>
-        <button type="button" class="button" id="login">Login</button>
-        <br>
-      </form>
-    </div> <!-- logindiv -->
   </body>
 </html>

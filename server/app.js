@@ -6,6 +6,7 @@ var http = require("http").Server(app);
 var io = require('socket.io')(http);
 var path = require("path");
 
+var _ = require('underscore');
 var routes = require("../routes");
 var port = 3000;
 
@@ -16,6 +17,8 @@ var defaults = {
   chatrooms: ['Main', 'Second', 'Third']
 };
 
+var messages = [];
+
 io.on('connection', function(socket) {
   console.log('client connected: ', socket.id);
 
@@ -25,13 +28,27 @@ io.on('connection', function(socket) {
   socket.join(defaults.chatrooms[0]);
 
   socket.on('chat message', function(data) {
+    messages.push(data);
     io.to(data['chatroom']).emit('broadcast chat', data);
   })
 
-  socket.on('channel change', function(data) {
-    console.log(socket.id, ' wants to join channel: ', data);
-    socket.leave();
-    socket.join(data);
+  // when client request a channel change
+  socket.on('channel change', function(channel) {
+    console.log(socket.id, ' wants to join channel: ', channel);
+    // if socket had a channel before, leave the channel
+    if (socket.lastChannel) {
+      socket.leave(socket.lastChannel);
+      socket.lastChannel = null;
+    }
+    socket.join(channel);
+    socket.lastChannel = channel;
+    // send last messages of current channel to socket
+    var channelMessages = _.filter(messages, function(item) {
+      if (item['chatroom'] === channel) {
+        return item;
+      }
+    })
+    io.to(socket.id).emit('channel rebuild', channelMessages);
   })
 
   socket.on('disconnect', function() {
