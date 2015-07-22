@@ -7,26 +7,51 @@
     <link href='http://fonts.googleapis.com/css?family=Rajdhani:400,700' rel='stylesheet' type='text/css'>
 
     <!-- dependencies -->
-    <script src="/public/client/bower_components/jquery/jquery.min.js"></script>
-    <script src="/public/client/bower_components/underscore/underscore-min.js"></script>
-    <!-- your scripts -->
-    <!-- // <script src="/public/client/env/config.js"></script> -->
-    <!-- // <script src="/public/client/scripts/app.js"></script> -->
+    <script src="/public/bower_components/jquery/jquery.min.js"></script>
+    <script src="/public/bower_components/underscore/underscore-min.js"></script>
 
     <script src="https://cdn.socket.io/socket.io-1.3.6.js"></script>
     <script>
     var socket = io();
 
-    $(document).on('click', '#submitMessage', function() {
-      var data = $('#inputMessage').val();
-      socket.emit('msg', data);
-      $('#inputMessage').val('');
-      return false;
+    // register for channel 'All Rooms'?
+
+    // on init populate chatroom selector with existing chatrooms
+    socket.on('init', function(data){
+      console.log('I just connected to the server, which sent me this: ', data);
+      _.each(data.chatrooms, function(chatroom){
+        $('#chatrooms').append('<option value="'+chatroom+'">'+chatroom+'</option>');
+      })
+
+      // listen for chatroom changes and emit an event to the server to join new channel
+      $("#chatrooms").change(function () {
+        // tell server we are switching channels
+        socket.emit('channel change', $('option:selected').text());
+        // empty the current message board
+        $('#messages').empty();
+        // now we need to rebuild the previous (10) messages from storage 
+        socket.on('channel rebuild', function(data){
+
+        })
+      });
     })
 
-    socket.on('msg', function(msg){
-      $('#messages').prepend('<p>'+msg+'</p>');
+    // send new message
+    $(document).on('click', '#submitMessage', function() {
+      var data = {
+        'chatroom': $('#chatrooms').val(),
+        'username': $('#userName').val(),
+        'text' : $('#inputMessage').val()
+        }
+      // send data to server
+      socket.emit('chat message', data);
+      $('#inputMessage').val('');
     })
+
+    // receive new message from server
+    socket.on('broadcast chat', function(data){
+       $('#messages').prepend('<div><span>'+data.username+'</span>: <span>'+data.text+'</span></div>');
+     })
 
     </script>
   </head>
@@ -39,10 +64,11 @@
       </select>
       <div id="form">
          <form id="sendMessageForm">
+           <input type="text" id='userName' placeholder="Username" >
            <input type="text" id='inputMessage' placeholder="Write a message" >
            <button type='button' id='submitMessage'>Submit</button>
-           <input type="text" id='inputRoom' placeholder="New Room Name" >
-           <button type='button' id='submitRoom'>Submit</button>
+           <!-- <input type="text" id='inputRoom' placeholder="New Room Name" > -->
+           <!-- <button type='button' id='submitRoom'>Submit</button> -->
          </form>
       </div> <!-- form -->
       <div id="messages">
