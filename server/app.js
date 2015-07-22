@@ -51,9 +51,14 @@ io.on('connection', function(socket) {
     io.to(socket.id).emit('channel rebuild', channelMessages);
   })
 
+  socket.on('channel added', function(data) {
+    socket.emit('new channel', data);
+  })
+
   socket.on('disconnect', function() {
     console.log('client disconnected');
   })
+
 })
 
 

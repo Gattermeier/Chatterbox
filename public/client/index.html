@@ -55,23 +55,38 @@
     })
 
     // TODO: create new chatrooms
+    $(document).on('click', '#submitRoom', function() {
+      var data = $('#inputRoom').val();
+      // send data to server
+      socket.emit('channel added', data);
+      $('#inputRoom').val('');
+    })
+
+    socket.on('new channel', function(chatroom){
+      console.log(chatroom);
+      $('#chatrooms').append('<option value="'+chatroom+'">'+chatroom+'</option>');
+    })
 
     </script>
   </head>
 
   <body>
     <div id="main">
-      <h1 class='logo'>chatterbox</h1>
-      <div id="signedin">signed in as: <span id="username">Guest</span></div>
+      <h1 class='logo'>Simple Chat Client</h1>
+      <h2>built on Node.js, Express JS and Socket.io</h2>
+      <br>
+      <p>Example Implementation: </p>
       <select id='chatrooms'>
       </select>
       <div id="form">
          <form id="sendMessageForm">
-           <input type="text" id='userName' placeholder="Username" >
-           <input type="text" id='inputMessage' placeholder="Write a message" >
-           <button type='button' id='submitMessage'>Submit</button>
-           <!-- <input type="text" id='inputRoom' placeholder="New Room Name" > -->
-           <!-- <button type='button' id='submitRoom'>Submit</button> -->
+            <input type="text" id='userName' placeholder="Username" >
+            <input type="text" id='inputMessage' placeholder="Write a message" >
+            <button type='button' id='submitMessage'>Submit</button>
+         </form>
+         <form id="createChatroom">
+            <input type="text" id='inputRoom' placeholder="New Room Name" >
+            <button type='button' id='submitRoom'>Submit</button>
          </form>
       </div> <!-- form -->
       <div id="messages">
